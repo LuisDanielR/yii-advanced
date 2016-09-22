@@ -8,6 +8,7 @@ use backend\models\CompaniesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+date_default_timezone_set('America/Mexico_City');
 
 /**
  * CompaniesController implements the CRUD actions for Companies model.
@@ -65,7 +66,9 @@ class CompaniesController extends Controller
     {
         $model = new Companies();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->company_created_date = date('Y-m-d h-i-s'); 
+            $model->save();
             return $this->redirect(['view', 'id' => $model->companies_id]);
         } else {
             return $this->render('create', [

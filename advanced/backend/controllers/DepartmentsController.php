@@ -8,6 +8,7 @@ use backend\models\DepartmentsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+date_default_timezone_set('America/Mexico_City');
 
 /**
  * DepartmentsController implements the CRUD actions for Departments model.
@@ -65,7 +66,9 @@ class DepartmentsController extends Controller
     {
         $model = new Departments();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->department_created_date = date('Y-m-d h-i-s'); 
+            $model->save();
             return $this->redirect(['view', 'id' => $model->departments_id]);
         } else {
             return $this->render('create', [

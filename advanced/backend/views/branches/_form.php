@@ -2,27 +2,31 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use yii\helpers\ArrayHelper;
+use backend\models\Companies;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Branches */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\widgets\ActiveForm 
+    <?= $form->field($model, 'branch_created_date')->textInput() ?> */
 ?>
 
 <div class="branches-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'branch_id')->textInput() ?>
-
+    <?= $form->field($model, 'companies_company_id')->dropDownList(
+            ArrayHelper::map(Companies::find()->all(),'companies_id','company_name'),['prompt'=>'el mensaje']);
+           ?>
+    
     <?= $form->field($model, 'branch_name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'branch_address')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'branch_created_date')->textInput() ?>
+
 
     <?= $form->field($model, 'branch_status')->dropDownList([ 'active' => 'Active', 'inactive' => 'Inactive', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'companies_company_id')->textInput() ?>
+    
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

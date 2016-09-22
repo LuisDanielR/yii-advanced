@@ -23,9 +23,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'department_status') ?>
 
-    <?= $form->field($model, 'branches_branch_id') ?>
+    <?= $form->field($model, 'companies_company_id') ?>
 
-    <?php // echo $form->field($model, 'companies_company_id') ?>
+    <?php // echo $form->field($model, 'branches_branch_id') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

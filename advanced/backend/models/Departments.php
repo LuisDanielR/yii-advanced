@@ -11,8 +11,8 @@ use Yii;
  * @property string $department_name
  * @property string $department_created_date
  * @property string $department_status
- * @property integer $branches_branch_id
  * @property integer $companies_company_id
+ * @property integer $branches_branch_id
  *
  * @property Branches $branchesBranch
  * @property Companies $companiesCompany
@@ -33,10 +33,10 @@ class Departments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['departments_id', 'department_name', 'department_created_date', 'department_status', 'branches_branch_id', 'companies_company_id'], 'required'],
-            [['departments_id', 'branches_branch_id', 'companies_company_id'], 'integer'],
+            [['department_name', 'department_created_date', 'department_status', 'companies_company_id', 'branches_branch_id'], 'required'],
             [['department_created_date'], 'safe'],
             [['department_status'], 'string'],
+            [['companies_company_id', 'branches_branch_id'], 'integer'],
             [['department_name'], 'string', 'max' => 100],
             [['branches_branch_id'], 'exist', 'skipOnError' => true, 'targetClass' => Branches::className(), 'targetAttribute' => ['branches_branch_id' => 'branch_id']],
             [['companies_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::className(), 'targetAttribute' => ['companies_company_id' => 'companies_id']],
@@ -53,8 +53,8 @@ class Departments extends \yii\db\ActiveRecord
             'department_name' => 'Department Name',
             'department_created_date' => 'Department Created Date',
             'department_status' => 'Department Status',
-            'branches_branch_id' => 'Branches Branch ID',
             'companies_company_id' => 'Companies Company ID',
+            'branches_branch_id' => 'Branches Branch ID',
         ];
     }
 
@@ -74,3 +74,4 @@ class Departments extends \yii\db\ActiveRecord
         return $this->hasOne(Companies::className(), ['companies_id' => 'companies_company_id']);
     }
 }
+

@@ -8,7 +8,7 @@ use backend\models\BranchesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+date_default_timezone_set('America/Mexico_City');
 /**
  * BranchesController implements the CRUD actions for Branches model.
  */
@@ -65,7 +65,9 @@ class BranchesController extends Controller
     {
         $model = new Branches();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->branch_created_date = date('Y-m-d h-i-s'); 
+            $model->save();
             return $this->redirect(['view', 'id' => $model->branch_id]);
         } else {
             return $this->render('create', [
