@@ -18,8 +18,10 @@ class BranchesSearch extends Branches
     public function rules()
     {
         return [
-            [['branch_id', 'companies_company_id'], 'integer'],
-            [['branch_name', 'branch_address', 'branch_created_date', 'branch_status'], 'safe'],
+            //[['branch_id', 'companies_company_id'], 'integer'],
+            [['branch_id'], 'integer'],
+            //[['branch_name', 'branch_address', 'branch_created_date', 'branch_status'], 'safe'],
+            [['branch_name', 'branch_address', 'branch_created_date', 'branch_status', 'companies_company_id'], 'safe'],
         ];
     }
 
@@ -48,7 +50,21 @@ class BranchesSearch extends Branches
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        
+        $query->joinWith('companiesCompany'); //video 53
+        
+        $dataProvider->setSort([
+           'attributes' =>  [
+               'branch_name',
+               'branch_created_date',
+               'branch_status',
+               'companies_company_id'=>[
+                   'asc'=>['companies.company_name'=>SORT_ASC],
+                   'desc'=>['companies.company_name'=>SORT_DESC],
+               ]
+           ]
+        ]);
+        
         $this->load($params);
 
         if (!$this->validate()) {

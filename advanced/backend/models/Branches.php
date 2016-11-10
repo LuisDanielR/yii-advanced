@@ -3,7 +3,7 @@
 namespace backend\models;
 
 use Yii;
-
+use \himiklab\yii2\recaptcha\RecaptchaVali;
 /**
  * This is the model class for table "branches".
  *
@@ -22,6 +22,9 @@ class Branches extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    
+    public $reCapthca;
+    
     public static function tableName()
     {
         return 'branches';
@@ -33,13 +36,26 @@ class Branches extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['branch_name', 'branch_address', 'branch_created_date', 'branch_status', 'companies_company_id'], 'required'],
+            [['branch_name', /*'branch_address',*/ 'branch_created_date', /*'branch_status',*/ 'companies_company_id'], 'required'],
+            [['companies_company_id'], 'integer'],
             [['branch_created_date'], 'safe'],
             [['branch_status'], 'string'],
-            [['companies_company_id'], 'integer'],
-            [['branch_name'], 'string', 'max' => 100],
+            [['branch_name'], 'unique'],                        
+            [['branch_status'], 'required','when' => function($model){
+                return(!empty($model->branch_address)) ? true : false;
+            }, 'whenClient' => "function(){"
+                    . "if($('#branch_address').val() == undefined){"
+                    .       "false;"
+                    .       "alert('Agrega branch status ');"
+                    . "} else{"
+                    .       "true;"                    
+                    . "}"
+                . "}"
+            ],
+            [['branch_name'], 'string', 'max' => 100],                            
             [['branch_address'], 'string', 'max' => 255],
             [['companies_company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::className(), 'targetAttribute' => ['companies_company_id' => 'companies_id']],
+           
         ];
     }
 

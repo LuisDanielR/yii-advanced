@@ -4,17 +4,19 @@ namespace backend\controllers;
 
 use Yii;
 use backend\models\Companies;
+use backend\models\Branches;
 use backend\models\CompaniesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-date_default_timezone_set('America/Mexico_City');
-
+use yii\web\UploadedFile;
+use yii\web\ForbiddenHttpException;
 /**
  * CompaniesController implements the CRUD actions for Companies model.
  */
 class CompaniesController extends Controller
 {
+    
     /**
      * @inheritdoc
      */
@@ -64,17 +66,41 @@ class CompaniesController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Companies();
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->company_created_date = date('Y-m-d h-i-s'); 
+        
+        if(Yii::$app->user->can('create-company')){
+            
+         $model = new Companies();
+         $branch = new Branches();
+         
+        if ($model->load(Yii::$app->request->post()) && $branch->load(Yii::$app->request->post())) {
+            
+            $imageName = $model->company_name;    
+            if(!empty($model->file)){
+                $model->file = UploadedFile::getInstance($model, 'file');
+                $model->file->saveAs('uploads/'.$imageName.'.'.$model->file->extension);            
+                $model->logo = 'uploads/'.$imageName.'.'.$model->file->extension;
+            }else{
+                $model->logo = 'sin archivo';
+            }
+            $model->company_created_date = date('Y-m-d H:m:s');
+            $model->company_start_date = date('Y-m-d H:m:s');             
             $model->save();
+            
+            $branch->companies_company_id = $model->companies_id;
+            $branch->branch_created_date = date('Y-m-d H:m:s');
+            $branch->save();
+            
             return $this->redirect(['view', 'id' => $model->companies_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'branch'=> $branch,
             ]);
         }
+        }else{
+            throw new ForbiddenHttpException;
+        }
+        
     }
 
     /**

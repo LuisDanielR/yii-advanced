@@ -18,12 +18,28 @@ use backend\models\Branches;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'companies_company_id')->dropDownList(
+    <!--
+        <? $form->field($model, 'companies_company_id')->dropDownList(
             ArrayHelper::map(Companies::find()->all(),'companies_id','company_name'),['prompt'=>'Compañias']);
-    ?>
+        ?>
+    -->
+    
+    <?= $form->field($model, 'companies_company_id')->dropDownList(
+            ArrayHelper::map(Companies::find()->all(),"companies_id","company_name"),
+            [
+                'prompt'=>'Select Company',
+                'onchange'=>
+                        '$.post( "index.php?r=branches/lists&id='.'"+$(this).val(), function( data ){
+                            $( "select#departments-branches_branch_id" ).html( data );
+                    });'
+            ]);
+        ?>
     
     <?= $form->field($model, 'branches_branch_id')->dropDownList(
-            ArrayHelper::map(Branches::find()->all(),'branch_id','branch_name'),['prompt'=>'Branches']);
+            ArrayHelper::map(Branches::find()->all(),'branch_id','branch_name'),
+            [
+                'prompt'=>'Select Branch'
+            ]);
     ?>
     
     <?= $form->field($model, 'department_name')->textInput(['maxlength' => true]) ?>

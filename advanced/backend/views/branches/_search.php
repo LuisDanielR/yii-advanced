@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
-
+        
     <?= $form->field($model, 'branch_id') ?>
 
     <?= $form->field($model, 'branch_name') ?>
